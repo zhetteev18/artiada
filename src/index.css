@@ -1,0 +1,155 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+@layer base {
+  html {
+    scroll-behavior: smooth;
+    overflow-x: hidden;
+  }
+
+  body {
+    @apply overflow-x-hidden bg-surface font-sans text-ink antialiased;
+  }
+
+  ::selection {
+    @apply bg-gold/35 text-ink;
+  }
+}
+
+@layer components {
+  .site-shell {
+    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8;
+  }
+
+  .site-content {
+    @apply mx-auto w-full max-w-7xl;
+  }
+
+  .desktop-full-section {
+    @apply lg:block;
+  }
+
+  .glass {
+    @apply border border-white/50 bg-white/75 shadow-card backdrop-blur-xl;
+  }
+
+  .glass-dark {
+    @apply border border-white/10 bg-ink/80 shadow-lg backdrop-blur-xl;
+  }
+
+  .glass-card {
+    @apply glass rounded-2xl transition-all duration-500;
+  }
+
+  .glass-card:hover {
+    @apply -translate-y-1 shadow-card-hover;
+  }
+
+  .section-mesh {
+    @apply relative bg-mesh-light;
+  }
+
+  .section-mesh::before {
+    content: '';
+    @apply pointer-events-none absolute inset-0 opacity-40;
+    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  }
+
+  .gradient-text {
+    @apply bg-gradient-to-r from-gold via-gold-light to-gold bg-clip-text text-transparent;
+  }
+
+  .btn-shine {
+    @apply relative overflow-hidden;
+  }
+
+  .btn-shine::after {
+    content: '';
+    @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700;
+  }
+
+  .btn-shine:hover::after {
+    @apply translate-x-full;
+  }
+
+  .card-interactive {
+    @apply transition-all duration-500 ease-out;
+  }
+
+  .card-interactive:hover {
+    @apply -translate-y-1.5 shadow-card-hover;
+  }
+
+  .link-nav-active {
+    @apply bg-gold/15 text-ink;
+  }
+
+  .link-nav-active-hero {
+    @apply bg-white/15 text-white;
+  }
+}
+
+@keyframes marquee {
+  0% {
+    transform: translateX(0);
+  }
+  100% {
+    transform: translateX(-50%);
+  }
+}
+
+@keyframes slideUp {
+  from {
+    opacity: 0;
+    transform: translateY(24px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+@layer utilities {
+  .text-balance {
+    text-wrap: balance;
+  }
+}
+
+.animate-marquee-ticker {
+  animation: marquee 95s linear infinite;
+}
+
+@media (max-width: 640px) {
+  .animate-marquee-ticker {
+    animation-duration: 110s;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  .animate-ken-burns,
+  .animate-float,
+  .animate-shimmer,
+  .animate-pulse-soft,
+  .animate-marquee-ticker {
+    animation: none !important;
+  }
+
+  .card-interactive:hover,
+  .glass-card:hover {
+    transform: none;
+  }
+}
