@@ -1,6 +1,7 @@
 import { useCallback, useState } from 'react'
 
 import { ParticipationForm } from '../components/forms/ParticipationForm'
+import { MediaRefreshProvider } from '../hooks/useMediaRefresh'
 
 import { Footer } from '../components/layout/Footer'
 
@@ -67,9 +68,8 @@ export function HomePage() {
 
 
   return (
-
+    <MediaRefreshProvider>
     <>
-
       <ScrollProgress />
 
       <PageBackground />
@@ -147,11 +147,7 @@ export function HomePage() {
       {!formOpen && <MobileFormFab onClick={openForm} />}
 
       <ParticipationModal open={formOpen} onClose={() => setFormOpen(false)} />
-
     </>
-
+    </MediaRefreshProvider>
   )
-
 }
-
-

@@ -1,9 +1,12 @@
 import { useCallback, useEffect, useState } from 'react'
-import { galleryImagePath, galleryImages } from '../../data/media'
+import { getGalleryImages, galleryImagePath } from '../../data/media'
+import { useMediaVersion } from '../../hooks/useMediaRefresh'
 import { FadeIn } from '../ui/FadeIn'
 import { SectionHeading } from '../ui/SectionHeading'
 
 export function GallerySection() {
+  useMediaVersion()
+  const galleryImages = getGalleryImages()
   const [lightbox, setLightbox] = useState<number | null>(null)
 
   const close = useCallback(() => setLightbox(null), [])

@@ -1,21 +1,29 @@
-import manifest from './media-manifest.json'
+import staticManifest from './media-manifest.json'
 import { cofoundersDocs } from './cofounders-docs'
 
-export type MediaManifest = typeof manifest
+export type MediaManifest = typeof staticManifest
 
-export const media = manifest
+let currentManifest: MediaManifest = staticManifest
+
+export function applyMediaManifest(next: MediaManifest) {
+  currentManifest = next
+}
+
+function getManifest() {
+  return currentManifest
+}
 
 export function getHeroImage(): string | null {
-  return media.hero
+  return getManifest().hero
 }
 
 export function getPersonImage(id: 'tarbokov' | 'betuaganov'): string | null {
-  return media.people[id] ?? null
+  return getManifest().people[id] ?? null
 }
 
 export function getNewsImages(slug: string): string[] {
   const key = slug.toLowerCase()
-  const entry = (media.news as Record<string, string | string[]>)[key]
+  const entry = (getManifest().news as Record<string, string | string[]>)[key]
   if (!entry) return []
   return Array.isArray(entry) ? entry : [entry]
 }
@@ -25,7 +33,7 @@ export function getNewsImage(slug: string): string | null {
 }
 
 export function getGalleryImages() {
-  return media.gallery.map((file, i) => ({
+  return getManifest().gallery.map((file, i) => ({
     id: i + 1,
     src: `/images/gallery/${file}`,
     alt: `Артиада — фото ${i + 1}`,
@@ -33,19 +41,17 @@ export function getGalleryImages() {
 }
 
 export function galleryImagePath(index: number): string {
-  const file = media.gallery[index - 1]
+  const file = getManifest().gallery[index - 1]
   return file ? `/images/gallery/${file}` : ''
 }
-
-export const galleryImages = getGalleryImages()
 
 export function getCofounderDocs() {
   return cofoundersDocs.map((meta, index) => ({
     ...meta,
-    src: media.cofounders[index] ?? null,
+    src: getManifest().cofounders[index] ?? null,
   }))
 }
 
 export function getVideoCovers() {
-  return media.videos
+  return getManifest().videos
 }

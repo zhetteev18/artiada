@@ -75,7 +75,7 @@ export function AdminPage() {
 
   useEffect(() => {
     if (!token) return
-    loadNews().catch(() => setStatus('Не удалось загрузить новости. Запустите npm run dev:full'))
+    loadNews().catch(() => setStatus('Не удалось загрузить данные. Проверьте, что сервер запущен.'))
     loadGallery().catch(() => {})
     loadCalendar().catch(() => {})
     loadResults().catch(() => {})

@@ -10,6 +10,7 @@ const __dirname = path.dirname(fileURLToPath(import.meta.url))
 const root = path.resolve(__dirname, '..')
 const imagesRoot = path.join(root, 'public', 'images')
 const outFile = path.join(root, 'src', 'data', 'media-manifest.json')
+const publicOutFile = path.join(root, 'public', 'content', 'media-manifest.json')
 
 const EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif'])
 
@@ -123,8 +124,11 @@ const manifest = {
 }
 
 fs.writeFileSync(outFile, JSON.stringify(manifest, null, 2), 'utf8')
+fs.mkdirSync(path.dirname(publicOutFile), { recursive: true })
+fs.writeFileSync(publicOutFile, JSON.stringify(manifest, null, 2), 'utf8')
 
 console.log('Медиа обновлено:', outFile)
+console.log('Публичный манифест:', publicOutFile)
 console.log({
   hero: manifest.hero ? '✓' : '— положите файл в public/images/hero/',
   people: Object.values(manifest.people).filter(Boolean).length + '/' + PEOPLE_IDS.length,
