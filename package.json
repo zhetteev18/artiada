@@ -1,0 +1,38 @@
+{
+  "name": "artiada",
+  "private": true,
+  "version": "1.0.0",
+  "type": "module",
+  "scripts": {
+    "media": "node scripts/sync-media.mjs",
+    "images": "node scripts/sync-media.mjs",
+    "news:export": "tsx scripts/sync-news-json.mjs",
+    "admin": "node scripts/admin-server.mjs",
+    "start": "node scripts/server.mjs",
+    "dev": "npm run media && npm run news:export && vite",
+    "dev:full": "npm run media && npm run news:export && concurrently -k \"npm run admin\" \"vite\"",
+    "build": "npm run media && npm run news:export && tsc -b && vite build",
+    "lint": "eslint .",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "cors": "^2.8.6",
+    "express": "^5.2.1",
+    "multer": "^2.1.1",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "react-router-dom": "^6.30.4"
+  },
+  "devDependencies": {
+    "@types/react": "^18.3.12",
+    "@types/react-dom": "^18.3.1",
+    "@vitejs/plugin-react": "^4.3.4",
+    "autoprefixer": "^10.4.20",
+    "concurrently": "^8.2.2",
+    "postcss": "^8.4.49",
+    "tailwindcss": "^3.4.16",
+    "tsx": "^4.22.4",
+    "typescript": "~5.6.3",
+    "vite": "^5.4.11"
+  }
+}

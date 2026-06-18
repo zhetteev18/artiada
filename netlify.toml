@@ -1,0 +1,11 @@
+# Настройки сборки на Netlify (если подключаете GitHub/GitLab)
+[build]
+  command = "npm run build"
+  publish = "dist"
+
+# React Router: /admin и другие маршруты
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+ 
