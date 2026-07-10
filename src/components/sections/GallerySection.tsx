@@ -29,7 +29,7 @@ export function GallerySection() {
   }, [lightbox, close])
 
   return (
-    <section id="gallery" className="desktop-full-section scroll-mt-24 bg-white/50 py-14 sm:py-16 lg:py-20">
+    <section id="gallery" className="desktop-full-section scroll-mt-24 bg-surface py-14 sm:py-16 lg:py-20">
       <div className="w-full">
         <FadeIn>
           <SectionHeading
@@ -42,7 +42,7 @@ export function GallerySection() {
         {galleryImages.length === 0 ? (
           <p className="text-center text-sm text-ink-muted">
             Добавьте фото в <code className="text-xs">public/images/gallery/</code> или через{' '}
-            <a href="/admin" className="font-semibold text-gold underline-offset-2 hover:underline">
+            <a href="/admin" className="font-medium text-accent hover:underline">
               админ-панель
             </a>
           </p>
@@ -56,7 +56,7 @@ export function GallerySection() {
               >
                 <button
                   type="button"
-                  className="group relative w-full overflow-hidden rounded-2xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-gold"
+                  className="group relative w-full overflow-hidden rounded-xl focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-accent"
                   onClick={() => setLightbox(item.id)}
                 >
                   <img
@@ -64,10 +64,10 @@ export function GallerySection() {
                     alt={item.alt}
                     loading="lazy"
                     decoding="async"
-                    className="w-full object-cover transition-all duration-700 group-hover:scale-105 group-hover:brightness-105"
+                    className="w-full object-cover"
                   />
-                  <span className="absolute inset-0 flex items-center justify-center bg-ink/0 transition-all duration-500 group-hover:bg-ink/35">
-                    <span className="flex h-12 w-12 scale-75 items-center justify-center rounded-full bg-white/90 text-xl text-ink opacity-0 shadow-lg transition-all duration-300 group-hover:scale-100 group-hover:opacity-100">
+                  <span className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-200 group-hover:bg-black/20">
+                    <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-lg text-ink opacity-0 transition-opacity duration-200 group-hover:opacity-100">
                       +
                     </span>
                   </span>
@@ -80,7 +80,7 @@ export function GallerySection() {
 
       {lightbox !== null && (
         <div
-          className="fixed inset-0 z-[70] flex animate-[fadeIn_0.25s_ease-out] items-center justify-center bg-ink/92 p-4 backdrop-blur-sm"
+          className="fixed inset-0 z-[70] flex animate-[fadeIn_0.25s_ease-out] items-center justify-center bg-black/90 p-4"
           role="dialog"
           aria-modal="true"
           aria-label="Просмотр фото"
@@ -126,7 +126,7 @@ export function GallerySection() {
             className="max-h-[90vh] max-w-full rounded-2xl object-contain shadow-2xl ring-1 ring-white/10"
             onClick={(e) => e.stopPropagation()}
           />
-          <p className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-white/10 px-4 py-1.5 text-sm text-white/90 backdrop-blur-md">
+          <p className="absolute bottom-6 left-1/2 -translate-x-1/2 rounded-full bg-white/15 px-4 py-1.5 text-sm text-white/90">
             {lightbox} / {galleryImages.length}
           </p>
         </div>

@@ -1,4 +1,8 @@
-import { useEffect, useState } from 'react'
+import { useEffect, useMemo, useState } from 'react'
+import {
+  getUpcomingRegulations,
+  type ContestRegulation,
+} from '../../data/contest-regulations'
 import { getNewsImage } from '../../data/media'
 import type { NewsItem } from '../../data/news'
 import { useNews } from '../../hooks/useNews'
@@ -18,68 +22,137 @@ function TickerCard({
     <button
       type="button"
       onClick={() => onSelect(item)}
-      className="group flex w-[min(88vw,400px)] shrink-0 items-center gap-3.5 py-2 text-left sm:w-[420px] sm:gap-4 lg:w-[360px] xl:w-[380px]"
+      className="group w-[min(72vw,260px)] shrink-0 text-left sm:w-[280px]"
     >
-      {imageSrc ? (
-        <img
-          src={imageSrc}
-          alt=""
-          className="h-16 w-16 shrink-0 rounded-lg object-cover shadow-[0_4px_16px_rgba(0,0,0,0.35)] transition-transform duration-300 group-hover:scale-[1.03] sm:h-[4.5rem] sm:w-[4.5rem] lg:h-14 lg:w-14 lg:rounded-md xl:h-16 xl:w-16"
-        />
-      ) : (
-        <span className="flex h-16 w-16 shrink-0 items-center justify-center rounded-lg bg-white/10 text-xl lg:h-14 lg:w-14">
-          📰
-        </span>
-      )}
-      <span className="min-w-0 flex-1">
-        <time
-          dateTime={item.date}
-          className="text-[11px] font-semibold text-gold-light sm:text-xs [text-shadow:0_1px_4px_rgba(0,0,0,0.45)]"
-        >
-          {formatNewsDateShort(item.date)}
-        </time>
-        <span className="mt-1 line-clamp-2 font-display text-base font-semibold leading-snug text-white transition-colors group-hover:text-gold-light sm:text-lg lg:text-[15px] lg:leading-snug xl:text-base [text-shadow:0_1px_8px_rgba(0,0,0,0.5)]">
-          {item.title}
-        </span>
-      </span>
+      <div className="relative overflow-hidden rounded-xl bg-white/10 ring-1 ring-white/20 transition-transform duration-300 group-hover:scale-[1.01]">
+        {imageSrc ? (
+          <img
+            src={imageSrc}
+            alt=""
+            className="aspect-[16/10] w-full object-cover"
+            loading="lazy"
+            decoding="async"
+          />
+        ) : (
+          <div className="flex aspect-[16/10] w-full items-center justify-center bg-white/5">
+            <span className="text-2xl opacity-40">📰</span>
+          </div>
+        )}
+        <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
+        <div className="absolute inset-x-0 bottom-0 p-3">
+          <time
+            dateTime={item.date}
+            className="text-[11px] font-medium uppercase tracking-wide text-white/70 sm:text-xs"
+          >
+            {formatNewsDateShort(item.date)}
+          </time>
+          <p className="mt-0.5 line-clamp-2 text-sm font-medium leading-snug text-white sm:text-[15px]">
+            {item.title}
+          </p>
+        </div>
+      </div>
     </button>
   )
 }
 
-function TickerDivider() {
+function ContestTickerCard({ item }: { item: ContestRegulation }) {
+  const scrollToRegulations = () => {
+    document
+      .querySelector('#contest-regulations')
+      ?.scrollIntoView({ behavior: 'smooth' })
+  }
+
   return (
-    <span
-      className="mx-2 h-12 w-px shrink-0 self-center bg-white/20 lg:mx-3 lg:h-14"
-      aria-hidden
-    />
+    <button
+      type="button"
+      onClick={scrollToRegulations}
+      className="group w-[min(68vw,240px)] shrink-0 text-left sm:w-[260px]"
+    >
+      <div className="flex aspect-[16/10] flex-col justify-between rounded-xl bg-white/95 p-3 shadow-sm ring-1 ring-black/5 transition-transform duration-300 group-hover:scale-[1.01] sm:p-3.5">
+        <div className="flex items-center justify-between gap-2">
+          <span className="text-[10px] font-semibold uppercase tracking-wide text-accent sm:text-[11px]">
+            Афиша
+          </span>
+          <span className="text-[11px] text-ink-faint">{item.year}</span>
+        </div>
+        <div>
+          <p className="text-[11px] font-medium text-ink-muted sm:text-xs">{item.dates}</p>
+          <p className="mt-1 line-clamp-2 text-sm font-medium leading-snug text-ink">
+            {item.title}
+          </p>
+        </div>
+      </div>
+    </button>
   )
 }
 
+function TickerGap() {
+  return <span className="mx-2.5 w-2.5 shrink-0 sm:mx-3" aria-hidden />
+}
+
+type TickerEntry =
+  | { kind: 'news'; item: NewsItem }
+  | { kind: 'contest'; item: ContestRegulation }
+
 function TickerTrack({
-  items,
-  onSelect,
+  entries,
+  onSelectNews,
   ariaHidden,
 }: {
-  items: NewsItem[]
-  onSelect: (item: NewsItem) => void
+  entries: TickerEntry[]
+  onSelectNews: (item: NewsItem) => void
   ariaHidden?: boolean
 }) {
   return (
-    <div className="flex shrink-0 items-center pr-6 lg:pr-8" aria-hidden={ariaHidden}>
-      {items.map((item, index) => (
-        <div key={`${item.id}-${ariaHidden ? 'dup' : 'main'}-${index}`} className="flex items-center">
-          {index > 0 && <TickerDivider />}
-          <TickerCard item={item} onSelect={onSelect} />
+    <div className="flex shrink-0 items-center" aria-hidden={ariaHidden}>
+      {entries.map((entry, index) => (
+        <div
+          key={`${entry.kind}-${entry.item.id}-${ariaHidden ? 'dup' : 'main'}-${index}`}
+          className="flex items-center"
+        >
+          {index > 0 && <TickerGap />}
+          {entry.kind === 'news' ? (
+            <TickerCard item={entry.item} onSelect={onSelectNews} />
+          ) : (
+            <ContestTickerCard item={entry.item} />
+          )}
         </div>
       ))}
     </div>
   )
 }
 
-export function NewsTicker() {
+type NewsTickerProps = {
+  overlay?: boolean
+}
+
+export function NewsTicker({ overlay = false }: NewsTickerProps) {
   const news = useNews()
+  const upcomingContests = useMemo(() => getUpcomingRegulations(), [])
   const [active, setActive] = useState<NewsItem | null>(null)
   const [reduceMotion, setReduceMotion] = useState(false)
+
+  const entries = useMemo<TickerEntry[]>(() => {
+    const contestEntries: TickerEntry[] = upcomingContests.slice(0, 5).map((item) => ({
+      kind: 'contest',
+      item,
+    }))
+    const newsEntries: TickerEntry[] = news.slice(0, 8).map((item) => ({
+      kind: 'news',
+      item,
+    }))
+
+    if (contestEntries.length === 0) return newsEntries
+    if (newsEntries.length === 0) return contestEntries
+
+    const merged: TickerEntry[] = []
+    const maxLen = Math.max(contestEntries.length, newsEntries.length)
+    for (let i = 0; i < maxLen; i += 1) {
+      if (i < contestEntries.length) merged.push(contestEntries[i])
+      if (i < newsEntries.length) merged.push(newsEntries[i])
+    }
+    return merged
+  }, [news, upcomingContests])
 
   useEffect(() => {
     const mq = window.matchMedia('(prefers-reduced-motion: reduce)')
@@ -89,37 +162,46 @@ export function NewsTicker() {
     return () => mq.removeEventListener('change', handler)
   }, [])
 
-  if (news.length === 0) return null
+  if (entries.length === 0) return null
 
   return (
     <>
-      <section
+      <div
         id="news-ticker"
-        aria-label="Лента новостей"
-        className="relative z-20 scroll-mt-24 border-y border-white/10 bg-ink/20 py-4 backdrop-blur-md lg:py-5"
+        aria-label="Лента новостей и афиша конкурсов"
+        className={`relative scroll-mt-24 ${
+          overlay ? 'z-10 bg-transparent py-3 pb-5 sm:py-4 sm:pb-6' : 'border-y border-line bg-surface py-4'
+        }`}
       >
-        <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-12 bg-gradient-to-r from-ink/35 to-transparent lg:w-20" />
-        <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-12 bg-gradient-to-l from-ink/35 to-transparent lg:w-20" />
+        {overlay && (
+          <>
+            <div className="pointer-events-none absolute inset-y-0 left-0 z-10 w-8 bg-gradient-to-r from-black/30 to-transparent sm:w-12" />
+            <div className="pointer-events-none absolute inset-y-0 right-0 z-10 w-8 bg-gradient-to-l from-black/30 to-transparent sm:w-12" />
+          </>
+        )}
 
         <div className="relative overflow-hidden">
           {reduceMotion ? (
-            <div className="site-shell flex items-center gap-0 overflow-x-auto [-webkit-overflow-scrolling:touch] [scroll-snap-type:x_mandatory]">
-              {news.map((item, index) => (
-                <div key={item.id} className="flex shrink-0 snap-center items-center">
-                  {index > 0 && <TickerDivider />}
-                  <TickerCard item={item} onSelect={setActive} />
+            <div className="site-shell flex items-center gap-3 overflow-x-auto [-webkit-overflow-scrolling:touch] [scroll-snap-type:x_mandatory]">
+              {entries.map((entry) => (
+                <div key={`${entry.kind}-${entry.item.id}`} className="shrink-0 snap-center">
+                  {entry.kind === 'news' ? (
+                    <TickerCard item={entry.item} onSelect={setActive} />
+                  ) : (
+                    <ContestTickerCard item={entry.item} />
+                  )}
                 </div>
               ))}
             </div>
           ) : (
-            <div className="animate-marquee-ticker flex w-max items-center hover:[animation-play-state:paused]">
-              <TickerTrack items={news} onSelect={setActive} />
-              <TickerDivider />
-              <TickerTrack items={news} onSelect={setActive} ariaHidden />
+            <div className="animate-marquee-ticker flex w-max items-center [transform:translateZ(0)] hover:[animation-play-state:paused]">
+              <TickerTrack entries={entries} onSelectNews={setActive} />
+              <TickerGap />
+              <TickerTrack entries={entries} onSelectNews={setActive} ariaHidden />
             </div>
           )}
         </div>
-      </section>
+      </div>
 
       {active && <NewsModal item={active} onClose={() => setActive(null)} />}
     </>

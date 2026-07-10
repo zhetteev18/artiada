@@ -21,7 +21,7 @@ export function ScrollProgress() {
       aria-hidden
     >
       <div
-        className="h-full bg-gradient-to-r from-gold-dark via-gold to-gold-light transition-[width] duration-150 ease-out"
+        className="h-full bg-accent transition-[width] duration-150 ease-out"
         style={{ width: `${progress}%` }}
       />
     </div>

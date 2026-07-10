@@ -4,68 +4,75 @@ export default {
   theme: {
     extend: {
       fontFamily: {
-        sans: ['Manrope', 'system-ui', 'sans-serif'],
-        display: ['Cormorant Garamond', 'Georgia', 'serif'],
+        sans: [
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'system-ui',
+          'sans-serif',
+        ],
+        display: [
+          'Inter',
+          '-apple-system',
+          'BlinkMacSystemFont',
+          'Segoe UI',
+          'system-ui',
+          'sans-serif',
+        ],
       },
       colors: {
+        accent: {
+          DEFAULT: '#0071e3',
+          hover: '#0077ed',
+          dark: '#0066cc',
+        },
         gold: {
-          DEFAULT: '#c9a227',
-          light: '#e8d48a',
-          dark: '#9a7b1a',
+          DEFAULT: '#b8860b',
+          light: '#d4a843',
+          dark: '#8b6914',
         },
         ink: {
-          DEFAULT: '#0c1018',
-          muted: '#5a6478',
-          soft: '#1a2233',
+          DEFAULT: '#1d1d1f',
+          muted: '#6e6e73',
+          soft: '#424245',
+          faint: '#86868b',
         },
         surface: {
-          DEFAULT: '#f4f6fb',
-          warm: '#faf8f4',
+          DEFAULT: '#f5f5f7',
+          warm: '#fbfbfd',
+          elevated: '#ffffff',
+        },
+        line: {
+          DEFAULT: 'rgba(0,0,0,0.08)',
+          strong: 'rgba(0,0,0,0.12)',
         },
       },
       boxShadow: {
-        glow: '0 0 40px -8px rgba(201, 162, 39, 0.45)',
-        card: '0 4px 24px -4px rgba(12, 16, 24, 0.08)',
-        'card-hover': '0 20px 50px -12px rgba(12, 16, 24, 0.18)',
+        glow: '0 0 0 1px rgba(0,0,0,0.04), 0 2px 12px rgba(0,0,0,0.06)',
+        card: '0 1px 3px rgba(0,0,0,0.04), 0 4px 16px rgba(0,0,0,0.04)',
+        'card-hover': '0 2px 8px rgba(0,0,0,0.06), 0 8px 28px rgba(0,0,0,0.08)',
+        header: '0 1px 0 rgba(0,0,0,0.06)',
       },
       backgroundImage: {
-        'gradient-radial': 'radial-gradient(var(--tw-gradient-stops))',
-        'mesh-light':
-          'radial-gradient(at 20% 20%, rgba(201,162,39,0.12) 0px, transparent 50%), radial-gradient(at 80% 0%, rgba(26,34,51,0.06) 0px, transparent 45%), radial-gradient(at 50% 100%, rgba(201,162,39,0.08) 0px, transparent 50%)',
+        'mesh-light': 'none',
       },
       animation: {
-        'fade-up': 'fadeUp 0.7s ease-out forwards',
-        'ken-burns': 'kenBurns 22s ease-in-out infinite alternate',
-        float: 'float 6s ease-in-out infinite',
-        shimmer: 'shimmer 2.5s linear infinite',
-        'pulse-soft': 'pulseSoft 2.5s ease-in-out infinite',
-        'marquee-ticker': 'marquee 95s linear infinite',
+        'fade-up': 'fadeUp 0.5s ease-out forwards',
+        'marquee-ticker': 'marquee 100s linear infinite',
       },
       keyframes: {
         marquee: {
-          '0%': { transform: 'translateX(0)' },
-          '100%': { transform: 'translateX(-50%)' },
+          '0%': { transform: 'translate3d(0,0,0)' },
+          '100%': { transform: 'translate3d(-50%,0,0)' },
         },
         fadeUp: {
-          '0%': { opacity: '0', transform: 'translateY(24px)' },
+          '0%': { opacity: '0', transform: 'translateY(12px)' },
           '100%': { opacity: '1', transform: 'translateY(0)' },
         },
-        kenBurns: {
-          '0%': { transform: 'scale(1.05)' },
-          '100%': { transform: 'scale(1.12)' },
-        },
-        float: {
-          '0%, 100%': { transform: 'translateY(0)' },
-          '50%': { transform: 'translateY(-8px)' },
-        },
-        shimmer: {
-          '0%': { backgroundPosition: '200% center' },
-          '100%': { backgroundPosition: '-200% center' },
-        },
-        pulseSoft: {
-          '0%, 100%': { opacity: '1', transform: 'scale(1)' },
-          '50%': { opacity: '0.85', transform: 'scale(1.03)' },
-        },
+      },
+      transitionTimingFunction: {
+        apple: 'cubic-bezier(0.25, 0.1, 0.25, 1)',
       },
     },
   },

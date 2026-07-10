@@ -21,7 +21,7 @@ export function FadeIn({ children, className = '', delay = 0 }: FadeInProps) {
           observer.disconnect()
         }
       },
-      { threshold: 0.08, rootMargin: '0px 0px -32px 0px' },
+      { threshold: 0.06, rootMargin: '0px 0px -24px 0px' },
     )
 
     observer.observe(el)
@@ -31,10 +31,8 @@ export function FadeIn({ children, className = '', delay = 0 }: FadeInProps) {
   return (
     <div
       ref={ref}
-      className={`transition-all duration-[800ms] ease-[cubic-bezier(0.22,1,0.36,1)] ${
-        visible
-          ? 'translate-y-0 scale-100 opacity-100 blur-0'
-          : 'translate-y-8 scale-[0.98] opacity-0 blur-[2px]'
+      className={`transition-[opacity,transform] duration-500 ease-apple ${
+        visible ? 'translate-y-0 opacity-100' : 'translate-y-3 opacity-0'
       } ${className}`}
       style={{ transitionDelay: `${delay}ms` }}
     >

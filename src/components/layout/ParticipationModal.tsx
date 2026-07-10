@@ -31,7 +31,7 @@ export function ParticipationModal({ open, onClose }: ParticipationModalProps) {
     >
       <button
         type="button"
-        className="absolute inset-0 bg-ink/60 backdrop-blur-md"
+        className="absolute inset-0 bg-black/40"
         aria-label="Закрыть"
         onClick={onClose}
       />

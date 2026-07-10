@@ -7,13 +7,10 @@ export function MobileFormFab({ onClick }: MobileFormFabProps) {
     <button
       type="button"
       onClick={onClick}
-      className="animate-pulse-soft fixed bottom-5 right-4 z-40 flex min-h-12 items-center gap-2 rounded-full bg-gradient-to-r from-gold-dark via-gold to-gold-light px-5 py-3 text-sm font-bold text-ink shadow-glow transition-transform hover:scale-105 active:scale-95 xl:hidden"
+      className="fixed bottom-5 right-4 z-40 flex min-h-11 items-center gap-2 rounded-full bg-accent px-5 py-3 text-sm font-medium text-white shadow-card transition-transform active:scale-95 xl:hidden"
       aria-label="Принять участие"
     >
-      <span aria-hidden className="text-base">
-        ✦
-      </span>
-      Участие
+      Заявка
     </button>
   )
 }

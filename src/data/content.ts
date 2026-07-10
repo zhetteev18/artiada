@@ -47,18 +47,85 @@ export const committees = [
   'Национальный Артийский комитет России',
 ]
 
-export const navLinks = [
-  { href: '#news', label: 'Новости' },
-  { href: '#about', label: 'О нас' },
-  { href: '#codex', label: 'Кодекс' },
-  { href: '#founders', label: 'Соучредители' },
-  { href: '#contests', label: 'Конкурсы' },
-  { href: '#calendar', label: 'Календарь' },
-  { href: '#results', label: 'Итоги' },
-  { href: '#gallery', label: 'Галерея' },
-  { href: '#videos', label: 'Медиа' },
-  { href: '#socials', label: 'Соцсети' },
-  { href: '#contacts', label: 'Контакты' },
+/** Пункт меню с подразделами */
+export type NavItem = {
+  href: string
+  label: string
+  children?: { href: string; label: string }[]
+}
+
+/** Компактное меню — смежные разделы объединены */
+export const navLinks: NavItem[] = [
+  {
+    href: '#about',
+    label: 'О движении',
+    children: [
+      { href: '#about', label: 'О нас' },
+      { href: '#codex', label: 'Кодекс' },
+      { href: '#founders', label: 'Соучредители' },
+    ],
+  },
+  {
+    href: '#news',
+    label: 'Новости',
+    children: [{ href: '#news', label: 'Все новости' }],
+  },
+  {
+    href: '#contests',
+    label: 'Конкурсы',
+    children: [
+      { href: '#contests', label: 'Конкурсы' },
+      { href: '#contest-regulations', label: 'Положения' },
+      { href: '#calendar', label: 'Календарь фестивалей' },
+      { href: '#results', label: 'Итоги' },
+    ],
+  },
+  {
+    href: '#gallery',
+    label: 'Галерея',
+    children: [
+      { href: '#gallery', label: 'Фотогалерея' },
+      { href: '#videos', label: 'Видео' },
+    ],
+  },
+  {
+    href: '#contacts',
+    label: 'Контакты',
+    children: [{ href: '#contacts', label: 'Связаться с нами' }],
+  },
+]
+
+/** К какому пункту меню относится каждый блок страницы */
+export const sectionNavMap: Record<string, string> = {
+  hero: '#about',
+  'news-ticker': '#news',
+  news: '#news',
+  about: '#about',
+  codex: '#about',
+  founders: '#about',
+  contests: '#contests',
+  'contest-regulations': '#contests',
+  calendar: '#contests',
+  results: '#contests',
+  gallery: '#gallery',
+  videos: '#gallery',
+  socials: '#contacts',
+  contacts: '#contacts',
+}
+
+export const scrollSpySections = [
+  '#hero',
+  '#news',
+  '#about',
+  '#codex',
+  '#founders',
+  '#contests',
+  '#contest-regulations',
+  '#calendar',
+  '#results',
+  '#gallery',
+  '#videos',
+  '#contacts',
 ]
 
 export const aboutIntro = `"Мировой и Российский Артийский комитет"`;

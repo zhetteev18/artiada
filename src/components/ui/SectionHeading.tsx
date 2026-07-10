@@ -14,27 +14,20 @@ export function SectionHeading({
   const alignClass = align === 'center' ? 'mx-auto text-center' : ''
 
   return (
-    <div className={`mb-12 max-w-3xl ${alignClass}`}>
+    <div className={`mb-10 max-w-3xl sm:mb-12 ${alignClass}`}>
       {eyebrow && (
-        <p className="mb-3 inline-flex items-center gap-2 text-xs font-bold uppercase tracking-[0.25em] text-gold">
-          <span className="h-px w-8 bg-gradient-to-r from-gold to-transparent" aria-hidden />
+        <p className="mb-2 text-xs font-semibold uppercase tracking-[0.12em] text-accent">
           {eyebrow}
         </p>
       )}
-      <h2 className="font-display text-balance text-3xl font-semibold leading-tight tracking-tight text-ink sm:text-4xl lg:text-[2.75rem]">
+      <h2 className="text-balance text-3xl font-semibold leading-[1.08] tracking-tight text-ink sm:text-4xl lg:text-[2.75rem]">
         {title}
       </h2>
       {subtitle && (
-        <p className="mt-4 text-base leading-relaxed text-ink-muted sm:text-lg">
+        <p className="mt-3 text-base leading-relaxed text-ink-muted sm:mt-4 sm:text-lg">
           {subtitle}
         </p>
       )}
-      <div
-        className={`mt-5 h-1 w-16 rounded-full bg-gradient-to-r from-gold via-gold-light to-transparent ${
-          align === 'center' ? 'mx-auto' : ''
-        }`}
-        aria-hidden
-      />
     </div>
   )
 }

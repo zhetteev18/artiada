@@ -1,67 +1,34 @@
-import { site } from '../../data/content'
+import { site, socials } from '../../data/content'
 import { FadeIn } from '../ui/FadeIn'
 import { SectionHeading } from '../ui/SectionHeading'
 
 const contactItems = [
   {
     type: 'organizationPhone',
-    label: 'Номер организации',
+    label: 'Телефон организации',
     value: site.organizationPhone,
     href: `tel:${site.organizationPhone.replace(/[^\d+]/g, '')}`,
-    icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M8 21h8m-4-4v4m-7-4h14a2 2 0 002-2V5a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-        />
-      </svg>
-    ),
   },
   {
     type: 'email',
     label: 'Email',
     value: site.email,
     href: `mailto:${site.email}`,
-    icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z"
-        />
-      </svg>
-    ),
   },
   {
     type: 'address',
     label: 'Адрес',
     value: site.address,
     href: null,
-    icon: (
-      <svg className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor">
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z"
-        />
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          strokeWidth={1.5}
-          d="M15 11a3 3 0 11-6 0 3 3 0 016 0z"
-        />
-      </svg>
-    ),
   },
 ] as const
 
 export function ContactsSection() {
   return (
-    <section id="contacts" className="desktop-full-section scroll-mt-24 border-t border-ink/5 py-14 sm:py-16 lg:py-20">
+    <section
+      id="contacts"
+      className="scroll-mt-24 border-t border-line bg-surface py-14 sm:py-16 lg:py-20"
+    >
       <div className="w-full">
         <FadeIn>
           <SectionHeading eyebrow="Связь" title="Контакты" align="center" />
@@ -72,15 +39,10 @@ export function ContactsSection() {
             {contactItems.map((item) => {
               const inner = (
                 <>
-                  <span className="flex h-12 w-12 items-center justify-center rounded-xl bg-gold/15 text-gold-dark transition-colors group-hover:bg-gold/25">
-                    {item.icon}
-                  </span>
-                  <p className="mt-4 text-xs font-bold uppercase tracking-wider text-ink-muted">
+                  <p className="text-xs font-bold uppercase tracking-wider text-ink-muted">
                     {item.label}
                   </p>
-                  <p className="mt-1 break-all text-sm font-semibold text-ink transition-colors group-hover:text-gold-dark">
-                    {item.value}
-                  </p>
+                  <p className="mt-2 break-all text-base font-semibold text-ink">{item.value}</p>
                 </>
               )
 
@@ -89,7 +51,7 @@ export function ContactsSection() {
                   <a
                     key={item.type}
                     href={item.href}
-                    className="card-interactive group rounded-2xl border border-ink/5 bg-white p-6 text-center shadow-card"
+                    className="apple-card p-6 text-center transition-colors hover:border-accent/30"
                   >
                     {inner}
                   </a>
@@ -99,12 +61,30 @@ export function ContactsSection() {
               return (
                 <div
                   key={item.type}
-                  className="rounded-2xl border border-ink/5 bg-white p-6 text-center shadow-card"
+                  className="rounded-2xl border border-line bg-white p-6 text-center"
                 >
                   {inner}
                 </div>
               )
             })}
+          </div>
+
+          <div className="mx-auto mt-10 flex max-w-4xl flex-col items-center gap-4 border-t border-line pt-8">
+            <p className="text-sm font-medium text-ink-muted">Мы в соцсетях</p>
+            <div className="flex flex-wrap justify-center gap-3">
+              {socials.map((social) => (
+                <a
+                  key={social.id}
+                  href={social.href}
+                  target={social.href.startsWith('tel:') ? undefined : '_blank'}
+                  rel={social.href.startsWith('tel:') ? undefined : 'noopener noreferrer'}
+                  className="flex items-center gap-2 rounded-full border border-line bg-white px-4 py-2 text-sm font-medium text-ink transition-colors hover:bg-surface"
+                >
+                  <img src={social.iconUrl} alt="" className="h-5 w-5 object-contain" />
+                  {social.title}
+                </a>
+              ))}
+            </div>
           </div>
         </FadeIn>
       </div>

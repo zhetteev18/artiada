@@ -17,15 +17,15 @@ export function FoundersSection() {
         <div className="space-y-10">
           {founders.map((founder, index) => (
             <FadeIn key={founder.id} delay={index * 80}>
-              <article className="card-interactive overflow-hidden rounded-3xl border border-ink/5 bg-white shadow-card">
+              <article className="apple-card overflow-hidden">
                 <div className="grid lg:grid-cols-12">
-                  <div className="group relative flex min-h-[320px] items-center justify-center overflow-hidden bg-gradient-to-br from-surface to-white p-3 lg:col-span-4 lg:min-h-[420px] lg:p-5">
+                  <div className="relative flex min-h-[280px] items-center justify-center overflow-hidden bg-surface p-3 lg:col-span-4 lg:min-h-[380px] lg:p-5">
                     <MediaImage
                       src={getPersonImage(founder.id as 'tarbokov' | 'betuaganov')}
                       alt={founder.name}
-                      className="max-h-[420px] w-full object-contain object-center transition-transform duration-700 group-hover:scale-[1.02] lg:max-h-[560px]"
+                      className="max-h-[420px] w-full object-contain object-center lg:max-h-[520px]"
                       fallback={
-                        <span className="font-display text-6xl font-bold text-gold/30">
+                        <span className="text-5xl font-semibold text-ink-faint">
                           {founder.name
                             .split(' ')
                             .map((w) => w[0])
@@ -36,10 +36,10 @@ export function FoundersSection() {
                     />
                   </div>
                   <div className="flex flex-col justify-center p-6 sm:p-10 lg:col-span-8">
-                    <h3 className="font-display text-2xl font-semibold text-ink sm:text-3xl">
+                    <h3 className="text-2xl font-semibold text-ink sm:text-3xl">
                       {founder.name}
                     </h3>
-                    <p className="mt-2 text-sm font-bold uppercase tracking-wider text-gold">
+                    <p className="mt-2 text-sm font-medium uppercase tracking-wide text-ink-muted">
                       {founder.role}
                     </p>
                     <p className="mt-5 whitespace-pre-line text-base leading-relaxed text-ink-muted">
@@ -64,18 +64,18 @@ export function FoundersSection() {
                     href={doc.src}
                     target="_blank"
                     rel="noopener noreferrer"
-                    className="card-interactive group block overflow-hidden rounded-2xl border border-ink/5 bg-white shadow-card"
+                    className="apple-card group block overflow-hidden"
                   >
                     <div className="aspect-[3/4] overflow-hidden bg-surface p-2">
                       <img
                         src={doc.src}
                         alt={doc.title}
                         loading="lazy"
-                        className="h-full w-full object-contain object-center transition-transform duration-700 group-hover:scale-[1.02]"
+                        className="h-full w-full object-contain object-center"
                       />
                     </div>
                     <div className="p-4">
-                      <p className="text-sm font-semibold text-ink group-hover:text-gold-dark">
+                      <p className="text-sm font-medium text-ink">
                         {doc.title}
                       </p>
                       <p className="mt-1 text-xs text-ink-muted">{doc.subtitle}</p>

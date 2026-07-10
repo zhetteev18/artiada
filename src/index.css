@@ -6,103 +6,108 @@
   html {
     scroll-behavior: smooth;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
   }
 
   body {
-    @apply overflow-x-hidden bg-surface font-sans text-ink antialiased;
+    @apply overflow-x-hidden bg-white font-sans text-ink antialiased;
+    text-rendering: optimizeLegibility;
   }
 
   ::selection {
-    @apply bg-gold/35 text-ink;
+    @apply bg-accent/15 text-ink;
   }
 }
 
 @layer components {
   .site-shell {
-    @apply mx-auto w-full max-w-[1440px] px-4 sm:px-6 lg:px-8;
+    @apply mx-auto w-full max-w-[1200px] px-5 sm:px-8 lg:px-10;
   }
 
   .site-content {
-    @apply mx-auto w-full max-w-7xl;
+    @apply mx-auto w-full max-w-5xl;
   }
 
   .desktop-full-section {
     @apply lg:block;
   }
 
-  .glass {
-    @apply border border-white/50 bg-white/75 shadow-card backdrop-blur-xl;
-  }
-
-  .glass-dark {
-    @apply border border-white/10 bg-ink/80 shadow-lg backdrop-blur-xl;
-  }
-
-  .glass-card {
-    @apply glass rounded-2xl transition-all duration-500;
-  }
-
-  .glass-card:hover {
-    @apply -translate-y-1 shadow-card-hover;
+  .section-alt {
+    @apply bg-surface;
   }
 
   .section-mesh {
-    @apply relative bg-mesh-light;
+    @apply bg-surface;
   }
 
-  .section-mesh::before {
-    content: '';
-    @apply pointer-events-none absolute inset-0 opacity-40;
-    background-image: url("data:image/svg+xml,%3Csvg viewBox='0 0 256 256' xmlns='http://www.w3.org/2000/svg'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.9' numOctaves='4' stitchTiles='stitch'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)' opacity='0.04'/%3E%3C/svg%3E");
+  .apple-card {
+    @apply rounded-2xl border border-line bg-white transition-shadow duration-300 ease-apple;
   }
 
-  .gradient-text {
-    @apply bg-gradient-to-r from-gold via-gold-light to-gold bg-clip-text text-transparent;
+  .apple-card:hover {
+    @apply shadow-card-hover;
   }
 
-  .btn-shine {
-    @apply relative overflow-hidden;
+  .glass {
+    @apply border border-line bg-white/80;
   }
 
-  .btn-shine::after {
-    content: '';
-    @apply absolute inset-0 -translate-x-full bg-gradient-to-r from-transparent via-white/25 to-transparent transition-transform duration-700;
-  }
-
-  .btn-shine:hover::after {
-    @apply translate-x-full;
+  .glass-card {
+    @apply apple-card;
   }
 
   .card-interactive {
-    @apply transition-all duration-500 ease-out;
+    @apply apple-card;
   }
 
-  .card-interactive:hover {
-    @apply -translate-y-1.5 shadow-card-hover;
+  .card-interactive:hover,
+  .glass-card:hover {
+    @apply shadow-card-hover;
+  }
+
+  .gradient-text {
+    @apply text-accent;
+  }
+
+  .btn-shine::after {
+    content: none;
   }
 
   .link-nav-active {
-    @apply bg-gold/15 text-ink;
+    @apply text-ink;
   }
 
   .link-nav-active-hero {
-    @apply bg-white/15 text-white;
+    @apply text-ink;
+  }
+
+  .segment-control {
+    @apply inline-flex rounded-full bg-surface p-1;
+  }
+
+  .segment-btn {
+    @apply rounded-full px-4 py-2 text-sm font-medium text-ink-muted transition-all duration-200 ease-apple;
+  }
+
+  .segment-btn-active {
+    @apply bg-white text-ink shadow-sm;
   }
 }
 
 @keyframes marquee {
   0% {
-    transform: translateX(0);
+    transform: translate3d(0, 0, 0);
   }
   100% {
-    transform: translateX(-50%);
+    transform: translate3d(-50%, 0, 0);
   }
 }
 
 @keyframes slideUp {
   from {
     opacity: 0;
-    transform: translateY(24px);
+    transform: translateY(16px);
   }
   to {
     opacity: 1;
@@ -126,12 +131,13 @@
 }
 
 .animate-marquee-ticker {
-  animation: marquee 95s linear infinite;
+  animation: marquee 100s linear infinite;
+  will-change: transform;
 }
 
 @media (max-width: 640px) {
   .animate-marquee-ticker {
-    animation-duration: 110s;
+    animation-duration: 120s;
   }
 }
 
@@ -140,17 +146,13 @@
     scroll-behavior: auto;
   }
 
-  .animate-ken-burns,
-  .animate-float,
-  .animate-shimmer,
-  .animate-pulse-soft,
   .animate-marquee-ticker {
     animation: none !important;
   }
 
   .card-interactive:hover,
-  .glass-card:hover {
+  .glass-card:hover,
+  .apple-card:hover {
     transform: none;
   }
 }
-

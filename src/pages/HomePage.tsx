@@ -20,6 +20,7 @@ import { CodexSection } from '../components/sections/CodexSection'
 import { ContactsSection } from '../components/sections/ContactsSection'
 
 import { ContestsSection } from '../components/sections/ContestsSection'
+import { ContestRegulationsSection } from '../components/sections/ContestRegulationsSection'
 
 import { ContestResultsSection } from '../components/sections/ContestResultsSection'
 
@@ -29,17 +30,11 @@ import { FoundersSection } from '../components/sections/FoundersSection'
 
 import { Hero } from '../components/sections/Hero'
 
-import { NewsTicker } from '../components/sections/NewsTicker'
-
 import { GallerySection } from '../components/sections/GallerySection'
 
 import { VideosSection } from '../components/sections/VideosSection'
 
-import { SocialsSection } from '../components/sections/SocialsSection'
-
 import { FadeIn } from '../components/ui/FadeIn'
-
-import { PageBackground } from '../components/ui/PageBackground'
 
 import { ScrollProgress } from '../components/ui/ScrollProgress'
 
@@ -72,8 +67,6 @@ export function HomePage() {
     <>
       <ScrollProgress />
 
-      <PageBackground />
-
       <Header onParticipateClick={openForm} />
 
 
@@ -81,8 +74,6 @@ export function HomePage() {
       {/* Hero и лента — на всю ширину экрана */}
 
       <Hero onParticipateClick={openForm} />
-
-      <NewsTicker />
 
 
 
@@ -102,6 +93,8 @@ export function HomePage() {
 
             <ContestsSection onParticipateClick={openForm} />
 
+            <ContestRegulationsSection />
+
             <FestivalCalendarSection />
 
             <ContestResultsSection />
@@ -109,8 +102,6 @@ export function HomePage() {
             <GallerySection />
 
             <VideosSection />
-
-            <SocialsSection />
 
             <ContactsSection />
 
@@ -120,7 +111,7 @@ export function HomePage() {
 
               id="participate-mobile"
 
-              className="section-mesh border-t border-ink/5 py-12 md:py-16"
+              className="section-alt border-t border-line py-12 md:py-16"
 
             >
 

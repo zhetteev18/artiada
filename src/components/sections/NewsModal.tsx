@@ -39,7 +39,7 @@ export function NewsModal({ item, onClose }: NewsModalProps) {
     >
       <button
         type="button"
-        className="absolute inset-0 animate-[fadeIn_0.3s_ease-out] bg-ink/70 backdrop-blur-md"
+        className="absolute inset-0 animate-[fadeIn_0.3s_ease-out] bg-black/50"
         aria-label="Закрыть"
         onClick={onClose}
       />
