@@ -21,7 +21,7 @@ function PdfIcon() {
 function ChevronIcon({ open }: { open: boolean }) {
   return (
     <svg
-      className={`h-4 w-4 shrink-0 text-ink-faint transition-transform duration-200 ${open ? 'rotate-180' : ''}`}
+      className={`h-5 w-5 shrink-0 text-ink-faint transition-transform duration-300 ${open ? 'rotate-180' : ''}`}
       fill="none"
       viewBox="0 0 24 24"
       stroke="currentColor"
@@ -37,45 +37,52 @@ function RegulationRow({ item }: { item: ContestRegulation }) {
   const fileName = item.pdfUrl.split('/').pop() ?? 'document.pdf'
 
   return (
-    <article className="border-b border-line last:border-b-0">
-      <div className="flex flex-col gap-3 py-4 sm:flex-row sm:items-center sm:gap-4 sm:py-3.5">
+    <article className="group relative mb-4 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-line transition-all duration-300 hover:shadow-card-hover last:mb-0">
+      <div className="absolute bottom-0 left-0 top-0 w-1 bg-gradient-to-b from-accent to-accent-dark opacity-0 transition-opacity duration-300 group-hover:opacity-100" />
+      
+      <div className="flex flex-col gap-4 p-5 sm:flex-row sm:items-center sm:gap-6 sm:p-6">
         <button
           type="button"
           onClick={() => setOpen((v) => !v)}
-          className="flex min-w-0 flex-1 items-start gap-3 text-left sm:items-center"
+          className="flex min-w-0 flex-1 items-start gap-4 text-left sm:items-center"
           aria-expanded={open}
         >
-          <ChevronIcon open={open} />
+          <div className="flex h-10 w-10 shrink-0 items-center justify-center rounded-full bg-surface-warm transition-colors duration-300 group-hover:bg-accent/10">
+            <ChevronIcon open={open} />
+          </div>
+          
           <div className="min-w-0 flex-1">
-            <div className="flex flex-wrap items-center gap-2">
-              <time
-                dateTime={item.dateStart}
-                className="text-xs font-medium tabular-nums text-ink-muted sm:text-sm"
-              >
+            <div className="flex flex-wrap items-center gap-2.5">
+              <span className="inline-flex items-center rounded-md bg-accent/10 px-2 py-1 text-xs font-semibold text-accent">
                 {item.dates}
-              </time>
-              <span className="hidden h-1 w-1 rounded-full bg-ink-faint sm:inline-block" />
-              <span className="text-xs text-ink-faint">{item.location}</span>
+              </span>
+              <span className="flex items-center text-xs text-ink-muted">
+                <svg className="mr-1 h-3.5 w-3.5" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M17.657 16.657L13.414 20.9a1.998 1.998 0 01-2.827 0l-4.244-4.243a8 8 0 1111.314 0z" />
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M15 11a3 3 0 11-6 0 3 3 0 016 0z" />
+                </svg>
+                {item.location}
+              </span>
             </div>
-            <h3 className="mt-1 text-[15px] font-medium leading-snug text-ink sm:text-base">
+            <h3 className="mt-2 text-lg font-semibold leading-tight text-ink transition-colors group-hover:text-accent">
               {item.title}
             </h3>
           </div>
         </button>
 
-        <div className="flex shrink-0 items-center gap-2 pl-7 sm:pl-0">
+        <div className="flex shrink-0 items-center gap-3 pl-14 sm:pl-0">
           <a
             href={item.pdfUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="inline-flex min-h-10 flex-1 items-center justify-center gap-2 rounded-full bg-accent px-4 text-sm font-medium text-white transition-colors hover:bg-accent-hover sm:min-h-9 sm:flex-none"
+            className="inline-flex min-h-10 items-center justify-center gap-2 rounded-xl bg-accent px-5 text-sm font-semibold text-white shadow-sm transition-all hover:-translate-y-0.5 hover:bg-accent-hover hover:shadow-md sm:min-h-11"
           >
             <PdfIcon />
             PDF
           </a>
           <a
             href={`mailto:${site.email}?subject=${encodeURIComponent(`Заявка: ${item.title}`)}`}
-            className="inline-flex min-h-10 flex-1 items-center justify-center rounded-full border border-line-strong px-4 text-sm font-medium text-ink transition-colors hover:bg-surface sm:min-h-9 sm:flex-none"
+            className="inline-flex min-h-10 items-center justify-center rounded-xl border-2 border-line px-5 text-sm font-semibold text-ink transition-all hover:border-ink hover:bg-ink hover:text-white sm:min-h-11"
           >
             Заявка
           </a>
@@ -88,25 +95,33 @@ function RegulationRow({ item }: { item: ContestRegulation }) {
         }`}
       >
         <div className="overflow-hidden">
-          <div className="border-t border-line bg-surface/60 px-4 py-4 sm:px-6">
-            <p className="text-sm leading-relaxed text-ink-muted">{item.description}</p>
+          <div className="border-t border-line/50 bg-surface-warm/50 px-5 py-5 sm:px-20">
+            <p className="text-[15px] leading-relaxed text-ink-soft">{item.description}</p>
 
-            <div className="mt-3 flex flex-wrap gap-1.5">
+            <div className="mt-4 flex flex-wrap gap-2">
               {item.nominations.map((n) => (
                 <span
                   key={n}
-                  className="rounded-md bg-white px-2.5 py-1 text-xs text-ink-muted ring-1 ring-line"
+                  className="rounded-lg bg-white px-3 py-1.5 text-xs font-medium text-ink-muted shadow-sm ring-1 ring-line/50"
                 >
                   {n}
                 </span>
               ))}
             </div>
 
-            <div className="mt-4 flex flex-col gap-2 text-xs text-ink-faint sm:flex-row sm:items-center sm:justify-between">
-              <span className="font-mono">{fileName}</span>
+            <div className="mt-5 flex flex-col gap-3 rounded-xl bg-white p-4 text-sm shadow-sm ring-1 ring-line/50 sm:flex-row sm:items-center sm:justify-between">
+              <span className="flex items-center gap-2 text-ink-muted">
+                <svg className="h-4 w-4 text-ink-faint" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                </svg>
+                <span className="font-mono text-xs">{fileName}</span>
+              </span>
               {item.deadline && (
-                <span>
-                  Приём заявок: <span className="text-ink-muted">{item.deadline}</span>
+                <span className="flex items-center gap-2 text-ink-muted">
+                  <svg className="h-4 w-4 text-accent" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M12 8v4l3 3m6-3a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                  Приём заявок: <span className="font-semibold text-ink">{item.deadline}</span>
                 </span>
               )}
             </div>
@@ -140,25 +155,35 @@ export function ContestRegulationsSection() {
   return (
     <section
       id="contest-regulations"
-      className="scroll-mt-24 border-t border-line bg-white py-14 sm:py-16 lg:py-20"
+      className="relative overflow-hidden scroll-mt-24 bg-surface py-16 sm:py-24"
     >
-      <div className="w-full">
+      {/* Decorative background elements */}
+      <div className="pointer-events-none absolute left-1/2 top-0 h-full w-full max-w-[1200px] -translate-x-1/2">
+        <div className="absolute left-10 top-20 h-64 w-64 rounded-full bg-accent/5 blur-3xl" />
+        <div className="absolute bottom-20 right-10 h-96 w-96 rounded-full bg-gold/5 blur-3xl" />
+      </div>
+
+      <div className="site-shell relative z-10">
         <FadeIn>
           <SectionHeading
             eyebrow="Документы"
             title="Положения конкурсов"
-            subtitle="Официальные PDF с датами и условиями участия. Заявки: 07baa@mail.ru"
+            subtitle="Официальные документы с датами, номинациями и условиями участия. Для подачи заявки скачайте PDF или напишите нам."
           />
         </FadeIn>
 
         <FadeIn delay={40}>
-          <div className="sticky top-[52px] z-20 -mx-5 border-y border-line bg-white/95 px-5 py-3 backdrop-blur-xl sm:top-[56px] sm:-mx-0 sm:rounded-2xl sm:border sm:px-4">
-            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
-              <div className="segment-control w-full sm:w-auto">
+          <div className="sticky top-[52px] z-20 mx-auto mb-8 mt-10 max-w-4xl rounded-2xl bg-white/80 p-4 shadow-sm ring-1 ring-line/50 backdrop-blur-xl sm:top-[64px] sm:p-5">
+            <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
+              <div className="segment-control flex w-full rounded-xl bg-surface-warm p-1.5 shadow-inner sm:w-auto">
                 <button
                   type="button"
                   onClick={() => setYearFilter('all')}
-                  className={`segment-btn flex-1 sm:flex-none ${yearFilter === 'all' ? 'segment-btn-active' : ''}`}
+                  className={`segment-btn flex-1 rounded-lg px-5 py-2.5 text-[15px] transition-colors sm:flex-none ${
+                    yearFilter === 'all'
+                      ? 'bg-white font-semibold text-ink shadow-sm'
+                      : 'text-ink-muted hover:bg-black/5 hover:text-ink'
+                  }`}
                 >
                   Все
                 </button>
@@ -167,24 +192,28 @@ export function ContestRegulationsSection() {
                     key={year}
                     type="button"
                     onClick={() => setYearFilter(year)}
-                    className={`segment-btn flex-1 sm:flex-none ${yearFilter === year ? 'segment-btn-active' : ''}`}
+                    className={`segment-btn flex-1 rounded-lg px-5 py-2.5 text-[15px] transition-colors sm:flex-none ${
+                      yearFilter === year
+                        ? 'bg-white font-semibold text-ink shadow-sm'
+                        : 'text-ink-muted hover:bg-black/5 hover:text-ink'
+                    }`}
                   >
                     {year}
                   </button>
                 ))}
               </div>
 
-              <label className="relative block w-full sm:max-w-xs">
+              <label className="relative block w-full sm:max-w-[320px]">
                 <span className="sr-only">Поиск по положениям</span>
                 <input
                   type="search"
                   value={query}
                   onChange={(e) => setQuery(e.target.value)}
-                  placeholder="Поиск конкурса…"
-                  className="w-full rounded-full border border-line bg-surface py-2.5 pl-10 pr-4 text-sm text-ink outline-none transition-[border-color,box-shadow] placeholder:text-ink-faint focus:border-accent focus:ring-2 focus:ring-accent/20"
+                  placeholder="Поиск по названию, городу..."
+                  className="peer w-full rounded-xl border-0 bg-surface-warm py-3 pl-11 pr-4 text-[15px] text-ink shadow-inner outline-none transition-all placeholder:text-ink-faint focus:bg-white focus:ring-2 focus:ring-accent/30"
                 />
                 <svg
-                  className="pointer-events-none absolute left-3.5 top-1/2 h-4 w-4 -translate-y-1/2 text-ink-faint"
+                  className="pointer-events-none absolute left-4 top-1/2 h-5 w-5 -translate-y-1/2 text-ink-faint transition-colors peer-focus:text-accent"
                   fill="none"
                   viewBox="0 0 24 24"
                   stroke="currentColor"
@@ -193,58 +222,59 @@ export function ContestRegulationsSection() {
                   <path
                     strokeLinecap="round"
                     strokeLinejoin="round"
-                    strokeWidth={1.5}
+                    strokeWidth={1.75}
                     d="M21 21l-4.35-4.35M11 18a7 7 0 100-14 7 7 0 000 14z"
                   />
                 </svg>
               </label>
             </div>
-
-            <p className="mt-2 text-xs text-ink-faint">
-              {filtered.length}{' '}
-              {filtered.length === 1
-                ? 'документ'
-                : filtered.length < 5
-                  ? 'документа'
-                  : 'документов'}
-            </p>
           </div>
         </FadeIn>
 
-        <FadeIn delay={80}>
-          <div className="mt-4 overflow-hidden rounded-2xl border border-line bg-white sm:mt-6">
-            {filtered.length === 0 ? (
-              <div className="px-6 py-12 text-center">
-                <p className="text-sm text-ink-muted">Ничего не найдено</p>
+        <div className="mx-auto max-w-4xl">
+          {filtered.length === 0 ? (
+            <FadeIn delay={80}>
+              <div className="flex flex-col items-center justify-center rounded-3xl border border-dashed border-line bg-white/50 px-6 py-16 text-center backdrop-blur-sm">
+                <div className="mb-4 flex h-16 w-16 items-center justify-center rounded-full bg-surface-warm text-2xl">
+                  <svg className="h-8 w-8 text-ink-faint" fill="none" viewBox="0 0 24 24" stroke="currentColor">
+                    <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M9.172 16.172a4 4 0 015.656 0M9 10h.01M15 10h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z" />
+                  </svg>
+                </div>
+                <h3 className="text-lg font-semibold text-ink">Ничего не найдено</h3>
+                <p className="mt-2 max-w-sm text-[15px] text-ink-muted">
+                  По вашему запросу нет положений. Попробуйте изменить фильтры или условия поиска.
+                </p>
                 <button
                   type="button"
                   onClick={() => {
                     setQuery('')
                     setYearFilter('all')
                   }}
-                  className="mt-3 text-sm font-medium text-accent hover:underline"
+                  className="mt-6 inline-flex min-h-10 items-center justify-center rounded-xl bg-ink px-6 text-sm font-semibold text-white transition-colors hover:bg-ink-soft"
                 >
                   Сбросить фильтры
                 </button>
               </div>
-            ) : (
-              <div className="divide-y divide-line px-4 sm:px-6">
-                {filtered.map((item) => (
-                  <RegulationRow key={item.id} item={item} />
-                ))}
-              </div>
-            )}
-          </div>
-        </FadeIn>
+            </FadeIn>
+          ) : (
+            <div className="flex flex-col">
+              {filtered.map((item, index) => (
+                <FadeIn key={item.id} delay={80 + Math.min(index * 20, 200)}>
+                  <RegulationRow item={item} />
+                </FadeIn>
+              ))}
+            </div>
+          )}
 
-        <FadeIn delay={120}>
-          <p className="mt-6 text-center text-xs text-ink-faint sm:text-sm">
-            Все файлы хранятся в{' '}
-            <code className="rounded bg-surface px-1.5 py-0.5 font-mono text-[11px] text-ink-muted">
-              /documents/contests/
-            </code>
-          </p>
-        </FadeIn>
+          <FadeIn delay={120}>
+            <p className="mt-10 text-center text-[13px] text-ink-faint">
+              Все файлы положений можно найти в папке{' '}
+              <code className="rounded-md border border-line bg-white px-2 py-1 font-mono text-[11px] text-ink-muted shadow-sm">
+                /documents/contests/
+              </code>
+            </p>
+          </FadeIn>
+        </div>
       </div>
     </section>
   )

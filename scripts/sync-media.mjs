@@ -111,29 +111,42 @@ function ensureFolders() {
   }
 }
 
-ensureFolders()
+try {
+  ensureFolders()
 
-const manifest = {
-  generatedAt: new Date().toISOString(),
-  hero: scanHero(),
-  people: scanPeople(),
-  cofounders: scanCofounders(),
-  gallery: scanGallery(),
-  news: scanNews(),
-  videos: scanVideos(),
+  const manifest = {
+    generatedAt: new Date().toISOString(),
+    hero: scanHero(),
+    people: scanPeople(),
+    cofounders: scanCofounders(),
+    gallery: scanGallery(),
+    news: scanNews(),
+    videos: scanVideos(),
+  }
+
+  fs.writeFileSync(outFile, JSON.stringify(manifest, null, 2), 'utf8')
+  fs.mkdirSync(path.dirname(publicOutFile), { recursive: true })
+  fs.writeFileSync(publicOutFile, JSON.stringify(manifest, null, 2), 'utf8')
+
+  console.log('Медиа обновлено:', outFile)
+  console.log('Публичный манифест:', publicOutFile)
+  console.log({
+    hero: manifest.hero ? '✓' : '— положите файл в public/images/hero/',
+    people: Object.values(manifest.people).filter(Boolean).length + '/' + PEOPLE_IDS.length,
+    cofounders: manifest.cofounders.length,
+    gallery: manifest.gallery.length,
+    news: Object.keys(manifest.news).length,
+    videos: manifest.videos.length,
+  })
+} catch (err) {
+  console.warn('sync-media: не удалось обновить манифест:', err.message)
+  // Если манифесты уже есть — не трогаем, билд продолжится
+  if (!fs.existsSync(outFile)) {
+    const empty = { generatedAt: new Date().toISOString(), hero: null, people: {}, cofounders: [], gallery: [], news: {}, videos: [] }
+    fs.mkdirSync(path.dirname(outFile), { recursive: true })
+    fs.writeFileSync(outFile, JSON.stringify(empty, null, 2), 'utf8')
+    fs.mkdirSync(path.dirname(publicOutFile), { recursive: true })
+    fs.writeFileSync(publicOutFile, JSON.stringify(empty, null, 2), 'utf8')
+  }
 }
 
-fs.writeFileSync(outFile, JSON.stringify(manifest, null, 2), 'utf8')
-fs.mkdirSync(path.dirname(publicOutFile), { recursive: true })
-fs.writeFileSync(publicOutFile, JSON.stringify(manifest, null, 2), 'utf8')
-
-console.log('Медиа обновлено:', outFile)
-console.log('Публичный манифест:', publicOutFile)
-console.log({
-  hero: manifest.hero ? '✓' : '— положите файл в public/images/hero/',
-  people: Object.values(manifest.people).filter(Boolean).length + '/' + PEOPLE_IDS.length,
-  cofounders: manifest.cofounders.length,
-  gallery: manifest.gallery.length,
-  news: Object.keys(manifest.news).length,
-  videos: manifest.videos.length,
-})

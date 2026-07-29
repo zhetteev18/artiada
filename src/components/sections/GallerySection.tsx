@@ -13,10 +13,11 @@ export function GallerySection() {
 
   useEffect(() => {
     if (lightbox === null) return
+    const total = galleryImages.length
     const onKey = (e: KeyboardEvent) => {
       if (e.key === 'Escape') close()
       if (e.key === 'ArrowRight')
-        setLightbox((i) => (i === null ? null : Math.min(i + 1, galleryImages.length)))
+        setLightbox((i) => (i === null ? null : Math.min(i + 1, total)))
       if (e.key === 'ArrowLeft')
         setLightbox((i) => (i === null ? null : Math.max(i - 1, 1)))
     }
@@ -26,7 +27,7 @@ export function GallerySection() {
       document.body.style.overflow = ''
       window.removeEventListener('keydown', onKey)
     }
-  }, [lightbox, close])
+  }, [lightbox, close, galleryImages.length])
 
   return (
     <section id="gallery" className="desktop-full-section scroll-mt-24 bg-surface py-14 sm:py-16 lg:py-20">
