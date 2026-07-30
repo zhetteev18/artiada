@@ -41,8 +41,8 @@ export function Hero({ onParticipateClick }: HeroProps) {
 
         <FadeIn delay={60}>
           <h1 className="mt-3 max-w-4xl text-left text-[1.5rem] font-bold leading-[1.15] tracking-tight text-white sm:mt-4 sm:text-3xl lg:text-[2.5rem]">
-            <span className="block">Мировой Артийский Комитет</span>
-            <span className="block mt-2">Евразийский континентальный Артийский Комитет</span>
+            <span className="block">Мировой Артийский комитет</span>
+            <span className="block mt-2">Евразийский континентальный Артийский комитет</span>
             <span className="block mt-2">Национальный Артийский комитет России</span>
           </h1>
         </FadeIn>
