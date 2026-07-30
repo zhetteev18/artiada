@@ -1,9 +1,7 @@
 import { useMemo, useState } from 'react'
-import {
-  contestRegulations,
-  groupRegulationsByYear,
-  type ContestRegulation,
-} from '../../data/contest-regulations'
+import { useRegulations } from '../../hooks/useRegulations'
+import type { ContestRegulation } from '../../data/contest-regulations'
+import mediaManifest from '../../data/media-manifest.json'
 import { site } from '../../data/content'
 import { FadeIn } from '../ui/FadeIn'
 import { SectionHeading } from '../ui/SectionHeading'
@@ -35,6 +33,7 @@ function ChevronIcon({ open }: { open: boolean }) {
 function RegulationRow({ item }: { item: ContestRegulation }) {
   const [open, setOpen] = useState(false)
   const fileName = item.pdfUrl.split('/').pop() ?? 'document.pdf'
+  const photos = mediaManifest.regulations?.[item.id] || []
 
   return (
     <article className="group relative mb-4 overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-line transition-all duration-300 hover:shadow-card-hover last:mb-0">
@@ -109,6 +108,19 @@ function RegulationRow({ item }: { item: ContestRegulation }) {
               ))}
             </div>
 
+            {photos.length > 0 && (
+              <div className="mt-5 grid gap-4 sm:grid-cols-2">
+                {photos.slice(0, 2).map((photo) => (
+                  <img
+                    key={photo}
+                    src={photo}
+                    alt={item.title}
+                    className="aspect-video w-full rounded-xl object-cover shadow-sm ring-1 ring-line/50"
+                  />
+                ))}
+              </div>
+            )}
+
             <div className="mt-5 flex flex-col gap-3 rounded-xl bg-white p-4 text-sm shadow-sm ring-1 ring-line/50 sm:flex-row sm:items-center sm:justify-between">
               <span className="flex items-center gap-2 text-ink-muted">
                 <svg className="h-4 w-4 text-ink-faint" fill="none" viewBox="0 0 24 24" stroke="currentColor">
@@ -133,14 +145,23 @@ function RegulationRow({ item }: { item: ContestRegulation }) {
 }
 
 export function ContestRegulationsSection() {
-  const groups = groupRegulationsByYear(contestRegulations)
+  const regulations = useRegulations()
+  
+  const groups = useMemo(() => {
+    const years = [...new Set(regulations.map((r) => r.year))].sort()
+    return years.map((year) => ({
+      year,
+      items: regulations.filter((r) => r.year === year),
+    }))
+  }, [regulations])
+  
   const years = groups.map((g) => g.year)
   const [yearFilter, setYearFilter] = useState<YearFilter>('all')
   const [query, setQuery] = useState('')
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase()
-    return contestRegulations.filter((item) => {
+    return regulations.filter((item) => {
       if (yearFilter !== 'all' && item.year !== yearFilter) return false
       if (!q) return true
       return (

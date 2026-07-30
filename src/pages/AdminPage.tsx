@@ -2,10 +2,11 @@ import { useCallback, useEffect, useState } from 'react'
 import { Link } from 'react-router-dom'
 import type { NewsItem } from '../data/news'
 import type { ContestResult, FestivalEvent } from '../data/editable-content'
+import type { ContestRegulation } from '../data/contest-regulations'
 
 const TOKEN_KEY = 'artiada_admin_token'
 
-type Tab = 'news' | 'gallery' | 'calendar' | 'results'
+type Tab = 'news' | 'gallery' | 'calendar' | 'results' | 'regulations'
 
 type GalleryFile = { name: string; url: string }
 
@@ -47,11 +48,13 @@ export function AdminPage() {
   const [gallery, setGallery] = useState<GalleryFile[]>([])
   const [calendar, setCalendar] = useState<FestivalEvent[]>([])
   const [results, setResults] = useState<ContestResult[]>([])
+  const [regulations, setRegulations] = useState<ContestRegulation[]>([])
   const [busy, setBusy] = useState(false)
   const [status, setStatus] = useState('')
   const [editing, setEditing] = useState<NewsItem | null>(null)
   const [editingEvent, setEditingEvent] = useState<FestivalEvent | null>(null)
   const [editingResult, setEditingResult] = useState<ContestResult | null>(null)
+  const [editingRegulation, setEditingRegulation] = useState<ContestRegulation | null>(null)
 
   const loadNews = useCallback(async () => {
     const data = await api<NewsItem[]>('/api/news', token)
@@ -73,13 +76,19 @@ export function AdminPage() {
     setResults(data)
   }, [token])
 
+  const loadRegulations = useCallback(async () => {
+    const data = await api<ContestRegulation[]>('/api/regulations', token)
+    setRegulations(data)
+  }, [token])
+
   useEffect(() => {
     if (!token) return
     loadNews().catch(() => setStatus('Не удалось загрузить данные. Проверьте, что сервер запущен.'))
     loadGallery().catch(() => {})
     loadCalendar().catch(() => {})
     loadResults().catch(() => {})
-  }, [token, loadNews, loadGallery, loadCalendar, loadResults])
+    loadRegulations().catch(() => {})
+  }, [token, loadNews, loadGallery, loadCalendar, loadResults, loadRegulations])
 
   const handleLogin = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -152,6 +161,24 @@ export function AdminPage() {
     }
   }
 
+  const saveRegulations = async (items: ContestRegulation[]) => {
+    setBusy(true)
+    setStatus('')
+    try {
+      await api('/api/regulations', token, {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(items),
+      })
+      setRegulations(items)
+      setStatus('Положения сохранены.')
+    } catch (err) {
+      setStatus(err instanceof Error ? err.message : 'Ошибка сохранения')
+    } finally {
+      setBusy(false)
+    }
+  }
+
   const uploadGallery = async (files: FileList | null) => {
     if (!files?.length) return
     setBusy(true)
@@ -209,6 +236,31 @@ export function AdminPage() {
       })
       setStatus('Фото новости загружены')
       if (editing?.slug === slug) setEditing({ ...editing })
+    } catch (err) {
+      setStatus(err instanceof Error ? err.message : 'Ошибка')
+    } finally {
+      setBusy(false)
+    }
+  }
+
+  const uploadRegulationImages = async (id: string, files: FileList | null) => {
+    if (!files?.length) return
+    const fd = new FormData()
+    Array.from(files).forEach((f) => fd.append('files', f))
+    setBusy(true)
+    try {
+      await fetch(`/api/regulations/${encodeURIComponent(id)}/images`, {
+        method: 'POST',
+        headers: authHeaders(token),
+        body: fd,
+      }).then(async (r) => {
+        if (!r.ok) {
+          const d = await r.json()
+          throw new Error(d.error || 'Ошибка')
+        }
+      })
+      setStatus('Фото положения загружены')
+      if (editingRegulation?.id === id) setEditingRegulation({ ...editingRegulation })
     } catch (err) {
       setStatus(err instanceof Error ? err.message : 'Ошибка')
     } finally {
@@ -279,7 +331,7 @@ export function AdminPage() {
           </div>
         </div>
         <nav className="mx-auto flex max-w-6xl flex-wrap gap-1 px-4 pb-3">
-          {(['news', 'gallery', 'calendar', 'results'] as Tab[]).map((t) => (
+          {(['news', 'gallery', 'calendar', 'results', 'regulations'] as Tab[]).map((t) => (
             <button
               key={t}
               type="button"
@@ -294,7 +346,9 @@ export function AdminPage() {
                   ? 'Галерея'
                   : t === 'calendar'
                     ? 'Календарь'
-                    : 'Итоги'}
+                    : t === 'results'
+                      ? 'Итоги'
+                      : 'Положения'}
             </button>
           ))}
         </nav>
@@ -562,6 +616,86 @@ export function AdminPage() {
               await saveResults(next)
               setEditingResult(null)
             }}
+          />
+        )}
+
+        {tab === 'regulations' && !editingRegulation && (
+          <section>
+            <button
+              type="button"
+              disabled={busy}
+              className="rounded-xl bg-gold px-4 py-3 text-sm font-semibold text-ink"
+              onClick={() =>
+                setEditingRegulation({
+                  id: `reg-${Date.now()}`,
+                  title: '',
+                  dates: '',
+                  dateStart: new Date().toISOString().slice(0, 10),
+                  location: '',
+                  description: '',
+                  nominations: [],
+                  deadline: '',
+                  pdfUrl: '',
+                  year: new Date().getFullYear(),
+                })
+              }
+            >
+              + Добавить положение
+            </button>
+            <ul className="mt-6 space-y-2">
+              {regulations.map((item) => (
+                <li
+                  key={item.id}
+                  className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-ink/10 bg-white px-4 py-3"
+                >
+                  <div className="min-w-0">
+                    <p className="truncate font-medium text-ink">{item.title}</p>
+                    <p className="text-xs text-ink-muted">
+                      {item.dates} · {item.location}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <button
+                      type="button"
+                      className="text-sm text-gold"
+                      onClick={() => setEditingRegulation(item)}
+                    >
+                      Редактировать
+                    </button>
+                    <button
+                      type="button"
+                      className="text-sm text-red-600"
+                      onClick={() => {
+                        if (!confirm('Удалить положение?')) return
+                        void saveRegulations(regulations.filter((n) => n.id !== item.id))
+                      }}
+                    >
+                      Удалить
+                    </button>
+                  </div>
+                </li>
+              ))}
+            </ul>
+          </section>
+        )}
+
+        {tab === 'regulations' && editingRegulation && (
+          <RegulationEditor
+            item={editingRegulation}
+            busy={busy}
+            token={token}
+            onCancel={() => setEditingRegulation(null)}
+            onSave={async (item) => {
+              const normalized = { ...item, id: item.id || `reg-${Date.now()}` }
+              const idx = regulations.findIndex((n) => n.id === normalized.id)
+              const next =
+                idx >= 0
+                  ? regulations.map((n, i) => (i === idx ? normalized : n))
+                  : [normalized, ...regulations]
+              await saveRegulations(next)
+              setEditingRegulation(null)
+            }}
+            onUploadImages={uploadRegulationImages}
           />
         )}
       </main>
@@ -874,3 +1008,125 @@ function Field({
     </label>
   )
 }
+
+function RegulationEditor({
+  item,
+  busy,
+  token,
+  onCancel,
+  onSave,
+  onUploadImages,
+}: {
+  item: ContestRegulation
+  busy: boolean
+  token: string
+  onCancel: () => void
+  onSave: (item: ContestRegulation) => Promise<void>
+  onUploadImages: (id: string, files: FileList | null) => Promise<void>
+}) {
+  const [draft, setDraft] = useState(item)
+  const [images, setImages] = useState<{ name: string; url: string }[]>([])
+  
+  const id = draft.id
+
+  const loadImages = useCallback(async () => {
+    if (!id) return
+    try {
+      const data = await api<{ files: { name: string; url: string }[] }>(
+        `/api/regulations/${encodeURIComponent(id)}/images`,
+        token,
+      )
+      setImages(data.files)
+    } catch {
+      setImages([])
+    }
+  }, [id, token])
+
+  useEffect(() => {
+    void loadImages()
+  }, [loadImages])
+
+  const deleteImage = async (filename: string) => {
+    if (!confirm('Удалить фото?')) return
+    await api(
+      `/api/regulations/${encodeURIComponent(id)}/images/${encodeURIComponent(filename)}`,
+      token,
+      { method: 'DELETE' },
+    )
+    await loadImages()
+  }
+
+  return (
+    <section className="rounded-2xl border border-ink/10 bg-white p-6">
+      <h2 className="text-lg font-bold">{item.title ? 'Редактирование' : 'Новое положение'}</h2>
+      <div className="mt-4 grid gap-4 sm:grid-cols-2">
+        <Field label="Заголовок" value={draft.title} onChange={(v) => setDraft({ ...draft, title: v })} />
+        <Field label="Идентификатор (id)" value={draft.id} onChange={(v) => setDraft({ ...draft, id: v })} hint="Без пробелов, латиница" />
+        <Field label="Дата для сортировки (ГГГГ-ММ-ДД)" value={draft.dateStart} onChange={(v) => setDraft({ ...draft, dateStart: v })} />
+        <Field label="Год" value={String(draft.year)} onChange={(v) => setDraft({ ...draft, year: Number(v) || draft.year })} />
+        <Field label="Даты (для карточки)" value={draft.dates} onChange={(v) => setDraft({ ...draft, dates: v })} />
+        <Field label="Локация" value={draft.location} onChange={(v) => setDraft({ ...draft, location: v })} />
+        <Field label="Дедлайн (текст)" value={draft.deadline || ''} onChange={(v) => setDraft({ ...draft, deadline: v })} />
+        <Field label="Ссылка на PDF" value={draft.pdfUrl} onChange={(v) => setDraft({ ...draft, pdfUrl: v })} />
+      </div>
+      
+      <Field
+        className="mt-4"
+        label="Номинации (через запятую)"
+        value={draft.nominations.join(', ')}
+        onChange={(v) => setDraft({ ...draft, nominations: v.split(',').map(n => n.trim()).filter(Boolean) })}
+      />
+      <Field
+        className="mt-4"
+        label="Описание"
+        value={draft.description}
+        onChange={(v) => setDraft({ ...draft, description: v })}
+        multiline
+        rows={4}
+      />
+
+      <div className="mt-6">
+        <p className="text-sm font-medium text-ink">Титульные фотографии (1-2 шт)</p>
+        <p className="text-xs text-ink-muted">
+          Папка: public/images/regulations/{id || '…'}/
+        </p>
+        <label className="mt-2 inline-flex cursor-pointer rounded-lg bg-ink/5 px-4 py-2 text-sm">
+          <input
+            type="file"
+            accept="image/*"
+            multiple
+            className="sr-only"
+            disabled={busy || !id}
+            onChange={(e) => {
+              void onUploadImages(id, e.target.files).then(() => loadImages())
+              e.target.value = ''
+            }}
+          />
+          Загрузить фото
+        </label>
+        <div className="mt-3 flex flex-wrap gap-2">
+          {images.map((img) => (
+            <div key={img.url} className="relative h-20 w-20 overflow-hidden rounded-lg">
+              <img src={img.url} alt="" className="h-full w-full object-cover" />
+              <button
+                type="button"
+                className="absolute inset-x-0 bottom-0 bg-red-600/90 py-0.5 text-[10px] text-white"
+                onClick={() => void deleteImage(img.name)}
+              >
+                ×
+              </button>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <EditorActions
+        busy={busy}
+        disabled={!draft.title.trim() || !draft.id.trim()}
+        onCancel={onCancel}
+        onSave={() => onSave(draft)}
+      />
+    </section>
+  )
+}
+

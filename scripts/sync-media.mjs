@@ -95,6 +95,25 @@ function scanNews() {
   return result
 }
 
+function scanRegulations() {
+  const dir = path.join(imagesRoot, 'regulations')
+  const result = {}
+  if (!fs.existsSync(dir)) return result
+
+  for (const entry of fs.readdirSync(dir)) {
+    const full = path.join(dir, entry)
+    const stat = fs.statSync(full)
+    if (stat.isDirectory()) {
+      const slug = entry.toLowerCase()
+      const images = listImages(full).map((f) => toUrl(full, f))
+      if (images.length > 0) result[slug] = images
+      continue
+    }
+  }
+
+  return result
+}
+
 function scanVideos() {
   const dir = path.join(imagesRoot, 'videos')
   return listImages(dir).map((f) => ({
@@ -104,7 +123,7 @@ function scanVideos() {
 }
 
 function ensureFolders() {
-  const folders = ['hero', 'people', 'cofounders', 'news', 'gallery', 'videos']
+  const folders = ['hero', 'people', 'cofounders', 'news', 'gallery', 'videos', 'regulations']
   for (const f of folders) {
     const p = path.join(imagesRoot, f)
     fs.mkdirSync(p, { recursive: true })
@@ -121,6 +140,7 @@ try {
     cofounders: scanCofounders(),
     gallery: scanGallery(),
     news: scanNews(),
+    regulations: scanRegulations(),
     videos: scanVideos(),
   }
 
@@ -136,13 +156,14 @@ try {
     cofounders: manifest.cofounders.length,
     gallery: manifest.gallery.length,
     news: Object.keys(manifest.news).length,
+    regulations: Object.keys(manifest.regulations).length,
     videos: manifest.videos.length,
   })
 } catch (err) {
   console.warn('sync-media: не удалось обновить манифест:', err.message)
   // Если манифесты уже есть — не трогаем, билд продолжится
   if (!fs.existsSync(outFile)) {
-    const empty = { generatedAt: new Date().toISOString(), hero: null, people: {}, cofounders: [], gallery: [], news: {}, videos: [] }
+    const empty = { generatedAt: new Date().toISOString(), hero: null, people: {}, cofounders: [], gallery: [], news: {}, regulations: {}, videos: [] }
     fs.mkdirSync(path.dirname(outFile), { recursive: true })
     fs.writeFileSync(outFile, JSON.stringify(empty, null, 2), 'utf8')
     fs.mkdirSync(path.dirname(publicOutFile), { recursive: true })

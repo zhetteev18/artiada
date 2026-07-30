@@ -11,9 +11,11 @@ const root = path.resolve(__dirname, '..')
 const imagesRoot = path.join(root, 'public', 'images')
 const galleryDir = path.join(imagesRoot, 'gallery')
 const newsDir = path.join(imagesRoot, 'news')
+const regulationsDir = path.join(imagesRoot, 'regulations')
 const newsJsonPath = path.join(root, 'public', 'content', 'news.json')
 const festivalCalendarPath = path.join(root, 'public', 'content', 'festival-calendar.json')
 const contestResultsPath = path.join(root, 'public', 'content', 'contest-results.json')
+const contestRegulationsJsonPath = path.join(root, 'public', 'content', 'contest-regulations.json')
 
 const EXT = new Set(['.jpg', '.jpeg', '.png', '.webp', '.gif', '.avif'])
 
@@ -77,8 +79,9 @@ const storage = multer.diskStorage({
       cb(null, galleryDir)
       return
     }
-    const slug = req.params.slug
-    const dir = path.join(newsDir, slug)
+    const slug = req.params.slug || req.params.id
+    const baseDir = req.uploadKind === 'regulations' ? regulationsDir : newsDir
+    const dir = path.join(baseDir, slug)
     fs.mkdirSync(dir, { recursive: true })
     cb(null, dir)
   },
@@ -241,6 +244,56 @@ export function createAdminApp(options = {}) {
     } else {
       return res.status(404).json({ error: 'Файл не найден' })
     }
+    runMediaSync()
+    res.json({ ok: true })
+  })
+
+  app.get('/api/regulations', (_req, res) => {
+    res.json(readJsonArray(contestRegulationsJsonPath))
+  })
+
+  app.put('/api/regulations', (req, res) => {
+    const items = req.body
+    if (!Array.isArray(items)) {
+      return res.status(400).json({ error: 'Ожидается массив положений' })
+    }
+    writeJsonArray(contestRegulationsJsonPath, items)
+    res.json({ ok: true, count: items.length })
+  })
+
+  app.get('/api/regulations/:id/images', (req, res) => {
+    const id = req.params.id
+    const folder = path.join(regulationsDir, id)
+    const inFolder = fs.existsSync(folder) ? listImages(folder) : []
+    const files = inFolder.map(name => ({ name, url: `/images/regulations/${id}/${name}` }))
+    res.json({ id, files })
+  })
+
+  app.post(
+    '/api/regulations/:id/images',
+    (req, _res, next) => {
+      req.uploadKind = 'regulations'
+      next()
+    },
+    upload.array('files', 20),
+    (req, res) => {
+      try {
+        runMediaSync()
+        res.json({ ok: true, uploaded: (req.files || []).map((f) => f.filename) })
+      } catch (e) {
+        res.status(500).json({ error: String(e.message) })
+      }
+    },
+  )
+
+  app.delete('/api/regulations/:id/images/:filename', (req, res) => {
+    const id = req.params.id
+    const file = path.basename(req.params.filename)
+    const inFolder = path.join(regulationsDir, id, file)
+
+    if (fs.existsSync(inFolder)) fs.unlinkSync(inFolder)
+    else return res.status(404).json({ error: 'Файл не найден' })
+    
     runMediaSync()
     res.json({ ok: true })
   })

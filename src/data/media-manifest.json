@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-15T11:28:29.404Z",
+  "generatedAt": "2026-07-30T10:33:00.493Z",
   "hero": "/images/hero-bg.png",
   "people": {
     "tarbokov": "/images/people/tarbokov.png",
@@ -126,5 +126,6 @@
       "/images/news/vstrechi-lyudi.jpg"
     ]
   },
+  "regulations": {},
   "videos": []
 }
