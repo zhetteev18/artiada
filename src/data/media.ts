@@ -32,6 +32,17 @@ export function getNewsImage(slug: string): string | null {
   return getNewsImages(slug)[0] ?? null
 }
 
+export function getRegulationImages(id: string): string[] {
+  const key = id.toLowerCase()
+  const entry = (getManifest().regulations as Record<string, string | string[]>)?.[key]
+  if (!entry) return []
+  return Array.isArray(entry) ? entry : [entry]
+}
+
+export function getRegulationImage(id: string): string | null {
+  return getRegulationImages(id)[0] ?? null
+}
+
 export function getGalleryImages() {
   return getManifest().gallery.map((file, i) => ({
     id: i + 1,

@@ -1,5 +1,5 @@
 {
-  "generatedAt": "2026-07-30T10:33:00.493Z",
+  "generatedAt": "2026-07-31T08:36:01.964Z",
   "hero": "/images/hero-bg.png",
   "people": {
     "tarbokov": "/images/people/tarbokov.png",
@@ -126,6 +126,19 @@
       "/images/news/vstrechi-lyudi.jpg"
     ]
   },
-  "regulations": {},
+  "regulations": {
+    "artiada-2026": [
+      "/images/regulations/artiada-2026/moscow1.jpg",
+      "/images/regulations/artiada-2026/moscow2.jpg"
+    ],
+    "belye-zhuravli-2026": [
+      "/images/regulations/belye-zhuravli-2026/images__1_.jpg",
+      "/images/regulations/belye-zhuravli-2026/images.jpg"
+    ],
+    "khrustalny-lotos-2027": [
+      "/images/regulations/khrustalny-lotos-2027/elista1.jpg",
+      "/images/regulations/khrustalny-lotos-2027/elista2.jpg"
+    ]
+  },
   "videos": []
 }

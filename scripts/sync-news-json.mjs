@@ -14,9 +14,13 @@ const outFile = path.join(outDir, 'news.json')
 try {
   const { news } = await import('../src/data/news.ts')
 
-  fs.mkdirSync(outDir, { recursive: true })
-  fs.writeFileSync(outFile, JSON.stringify(news, null, 2), 'utf8')
-  console.log('Новости экспортированы:', outFile, `(${news.length} шт.)`)
+  if (!fs.existsSync(outFile)) {
+    fs.mkdirSync(outDir, { recursive: true })
+    fs.writeFileSync(outFile, JSON.stringify(news, null, 2), 'utf8')
+    console.log('Новости экспортированы:', outFile, `(${news.length} шт.)`)
+  } else {
+    console.log('Используем существующий news.json, пропускаем экспорт.')
+  }
 } catch (err) {
   // Если уже есть news.json — не перезаписываем, просто пропускаем
   if (fs.existsSync(outFile)) {

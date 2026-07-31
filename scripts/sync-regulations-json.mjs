@@ -14,9 +14,13 @@ const outFile = path.join(outDir, 'contest-regulations.json')
 try {
   const { contestRegulations } = await import('../src/data/contest-regulations.ts')
 
-  fs.mkdirSync(outDir, { recursive: true })
-  fs.writeFileSync(outFile, JSON.stringify(contestRegulations, null, 2), 'utf8')
-  console.log('Положения экспортированы:', outFile, `(${contestRegulations.length} шт.)`)
+  if (!fs.existsSync(outFile)) {
+    fs.mkdirSync(outDir, { recursive: true })
+    fs.writeFileSync(outFile, JSON.stringify(contestRegulations, null, 2), 'utf8')
+    console.log('Положения экспортированы:', outFile, `(${contestRegulations.length} шт.)`)
+  } else {
+    console.log('Используем существующий contest-regulations.json, пропускаем экспорт.')
+  }
 } catch (err) {
   if (fs.existsSync(outFile)) {
     console.log('Используем существующий contest-regulations.json')
