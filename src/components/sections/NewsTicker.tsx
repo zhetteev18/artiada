@@ -8,7 +8,7 @@ import {
 
 } from '../../data/contest-regulations'
 
-import { getNewsImage, getRegulationImage } from '../../data/media'
+import { getNewsImage } from '../../data/media'
 
 import type { NewsItem } from '../../data/news'
 
