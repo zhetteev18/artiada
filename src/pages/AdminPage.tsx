@@ -378,7 +378,7 @@ export function AdminPage() {
             <div className="mt-6 grid grid-cols-2 gap-3 sm:grid-cols-4 md:grid-cols-5">
               {gallery.map((f) => (
                 <div key={f.name} className="overflow-hidden rounded-xl border border-ink/10">
-                  <img src={f.url} alt="" className="aspect-square w-full object-cover" />
+                  <img src={f.url} alt="" className="aspect-square w-full object-contain bg-ink/5" />
                   <button
                     type="button"
                     disabled={busy}
@@ -801,7 +801,7 @@ function NewsEditor({
         <div className="mt-3 flex flex-wrap gap-2">
           {images.map((img) => (
             <div key={img.url} className="relative h-20 w-20 overflow-hidden rounded-lg">
-              <img src={img.url} alt="" className="h-full w-full object-cover" />
+              <img src={img.url} alt="" className="h-full w-full object-contain bg-ink/5" />
               <button
                 type="button"
                 className="absolute inset-x-0 bottom-0 bg-red-600/90 py-0.5 text-[10px] text-white"
@@ -1107,7 +1107,7 @@ function RegulationEditor({
         <div className="mt-3 flex flex-wrap gap-2">
           {images.map((img) => (
             <div key={img.url} className="relative h-20 w-20 overflow-hidden rounded-lg">
-              <img src={img.url} alt="" className="h-full w-full object-cover" />
+              <img src={img.url} alt="" className="h-full w-full object-contain bg-ink/5" />
               <button
                 type="button"
                 className="absolute inset-x-0 bottom-0 bg-red-600/90 py-0.5 text-[10px] text-white"

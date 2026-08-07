@@ -60,7 +60,7 @@ function TickerCard({
 
             alt=""
 
-            className="aspect-[16/10] w-full object-cover"
+            className="aspect-[16/10] w-full object-contain bg-ink/5"
 
             loading="lazy"
 

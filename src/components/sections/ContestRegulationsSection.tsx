@@ -115,7 +115,7 @@ function RegulationRow({ item }: { item: ContestRegulation }) {
                     key={photo}
                     src={photo}
                     alt={item.title}
-                    className="aspect-video w-full rounded-xl object-cover shadow-sm ring-1 ring-line/50"
+                    className="aspect-video w-full rounded-xl object-contain bg-ink/5 shadow-sm ring-1 ring-line/50"
                   />
                 ))}
               </div>

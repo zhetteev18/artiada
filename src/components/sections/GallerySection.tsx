@@ -65,7 +65,7 @@ export function GallerySection() {
                     alt={item.alt}
                     loading="lazy"
                     decoding="async"
-                    className="w-full object-cover"
+                    className="w-full h-auto object-contain bg-ink/5"
                   />
                   <span className="absolute inset-0 flex items-center justify-center bg-black/0 transition-colors duration-200 group-hover:bg-black/20">
                     <span className="flex h-10 w-10 items-center justify-center rounded-full bg-white/90 text-lg text-ink opacity-0 transition-opacity duration-200 group-hover:opacity-100">

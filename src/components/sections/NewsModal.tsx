@@ -54,7 +54,7 @@ export function NewsModal({ item, onClose }: NewsModalProps) {
         </button>
         {currentImage && (
           <div className="relative aspect-video w-full overflow-hidden bg-ink/5">
-            <img src={currentImage} alt="" className="h-full w-full object-cover" />
+            <img src={currentImage} alt="" className="h-full w-full object-contain" />
             {images.length > 1 && (
               <>
                 <button
@@ -103,7 +103,7 @@ export function NewsModal({ item, onClose }: NewsModalProps) {
                       : 'border-transparent opacity-60 hover:opacity-100'
                   }`}
                 >
-                  <img src={src} alt="" className="h-full w-full object-cover" />
+                  <img src={src} alt="" className="h-full w-full object-contain bg-ink/5" />
                 </button>
               ))}
             </div>
